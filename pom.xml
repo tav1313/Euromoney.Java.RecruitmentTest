@@ -43,7 +43,7 @@
         		<configuration>
           			<archive>
             			<manifest>
-              				<mainClass>com.euromoney.ConsoleContent.Program</mainClass>
+                            <mainClass>com.euromoney.ConsoleContent.RunApp</mainClass>
             			</manifest>
           			</archive>
         		</configuration>
