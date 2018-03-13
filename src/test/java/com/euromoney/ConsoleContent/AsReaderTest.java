@@ -1,4 +1,4 @@
-package test.java.com.euromoney.ConsoleContent;
+package com.euromoney.ConsoleContent;
 
 import com.euromoney.ConsoleContent.datastore.NegReader;
 import org.junit.Assert;

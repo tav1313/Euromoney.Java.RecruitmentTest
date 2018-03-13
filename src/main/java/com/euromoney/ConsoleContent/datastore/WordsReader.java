@@ -1,4 +1,4 @@
-package main.java.com.euromoney.ConsoleContent.datastore;
+package com.euromoney.ConsoleContent.datastore;
 
 public interface WordsReader {
     String[] read();

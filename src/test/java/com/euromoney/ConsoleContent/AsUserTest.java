@@ -1,4 +1,4 @@
-package test.java.com.euromoney.ConsoleContent;
+package com.euromoney.ConsoleContent;
 
 import java.io.IOException;
 

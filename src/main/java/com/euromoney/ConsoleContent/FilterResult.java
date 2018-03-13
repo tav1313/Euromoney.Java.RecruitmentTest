@@ -1,4 +1,4 @@
-package main.java.com.euromoney.ConsoleContent;
+package com.euromoney.ConsoleContent;
 
 public class FilterResult {
     private int count;

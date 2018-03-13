@@ -1,4 +1,4 @@
-package main.java.com.euromoney.ConsoleContent;
+package com.euromoney.ConsoleContent;
 
 import com.euromoney.ConsoleContent.datastore.NegReader;
 import com.euromoney.ConsoleContent.datastore.WordsReader;
@@ -6,6 +6,7 @@ import com.euromoney.ConsoleContent.datastore.WordsReader;
 public class ContentEditor {
     private String HASH_STRING;
     private static final String DEFAULT_HASH_STRING = "#";
+    private static final char[] START_END_SPEC_CHARS = {' ', ',', '.'};
     private String[] negativeWords;
     private boolean filteringOffFlag;
 
@@ -26,6 +27,7 @@ public class ContentEditor {
             return negativeCount;
         }
 
+        String origContent = content;
         //we do support diff cases filtering/counting
         content = content.toLowerCase();
 
@@ -33,9 +35,9 @@ public class ContentEditor {
             int searchIdx = 0;
 
             //go through all possible occurrences
-            while (true) {
+            while (true && !currNegWord.equals("")) {
                 int currSearchIdx = content.indexOf(currNegWord, searchIdx);
-                char prevChar = '6'; //could be any value excluding ' '
+                char prevChar = '6'; //could be any value excluding START_END_SPEC_CHARS
                 boolean isStartOfString = false;
                 try {
                     prevChar = content.charAt(currSearchIdx - 1);
@@ -45,15 +47,15 @@ public class ContentEditor {
 
                 if (currSearchIdx != -1) {
                     searchIdx = currSearchIdx + currNegWord.length();
-                    if (prevChar == ' ' || isStartOfString) {
-                        char nextChar = '6'; //could be anything excluding ' '
+                    if (this.isSpecChar(prevChar) || isStartOfString) {
+                        char nextChar = '6'; //could be anything excluding START_END_SPEC_CHARS
                         boolean isEndOfString = false;
                         try {
                             nextChar = content.charAt(searchIdx);
                         } catch (StringIndexOutOfBoundsException e) {
                             isEndOfString = true;
                         }
-                        if (nextChar == ' ' || isEndOfString) {
+                        if (this.isSpecChar(nextChar) || isEndOfString) {
                             ++negativeCount;
                             if (isEndOfString) break;
                         }
@@ -63,7 +65,7 @@ public class ContentEditor {
             }
         }
 
-        System.out.println("==Scanned text: \n\n" + content + "\n");
+        System.out.println("==Scanned text: \n\n" + origContent + "\n");
         System.out.println("==Total number of negative words: \n\n" + negativeCount + "\n");
 
         return negativeCount;
@@ -94,9 +96,9 @@ public class ContentEditor {
             //TODO: seems like too complex impl - need to refactor the algorithm using regex
             //TODO: omit code dup after refactoring
             //go through all possible occurrences
-            while (true) {
+            while (true && !currNegWord.equals("")) {
                 int currSearchIdx = lowerCaseContent.indexOf(currNegWord, searchIdx);
-                char prevChar = '6'; //could be any value excluding ' '
+                char prevChar = '6'; //could be any value excluding START_END_SPEC_CHARS
                 boolean isStartOfString = false;
                 try {
                     prevChar = lowerCaseContent.charAt(currSearchIdx - 1);
@@ -107,15 +109,15 @@ public class ContentEditor {
                 if (currSearchIdx != -1) {
                     searchIdx = currSearchIdx + currNegWord.length();
 
-                    if (prevChar == ' ' || isStartOfString) {
-                        char nextChar = '6'; //could be anything excluding ' '
+                    if (isSpecChar(prevChar) || isStartOfString) {
+                        char nextChar = '6'; //could be anything excluding START_END_SPEC_CHARS
                         boolean isEndOfString = false;
                         try {
                             nextChar = lowerCaseContent.charAt(searchIdx);
                         } catch (StringIndexOutOfBoundsException e) {
                             isEndOfString = true;
                         }
-                        if (nextChar == ' ' || isEndOfString) {
+                        if (this.isSpecChar(nextChar) || isEndOfString) {
                             this.hashContent(bufContent, currNegWord, searchIdx, currSearchIdx);
                             ++negativeCount;
                             if (isEndOfString) break;
@@ -147,5 +149,18 @@ public class ContentEditor {
             }
 
         }
+    }
+
+    private boolean isSpecChar(char ch) {
+        boolean result = false;
+
+        for (int i = 0; i < ContentEditor.START_END_SPEC_CHARS.length; i++) {
+            if (ch == ContentEditor.START_END_SPEC_CHARS[i]) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
     }
 }
